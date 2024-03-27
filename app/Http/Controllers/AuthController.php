@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-	public function signup(LoginUserRequest $request): JsonResponse
+	public function signup(SignupUserRequest $request): JsonResponse
 	{
 		$credentials = $request->validated();
 
@@ -19,7 +19,7 @@ class AuthController extends Controller
 		return response()->json($user, 201);
 	}
 
-	public function login(SignupUserRequest $request): JsonResponse
+	public function login(LoginUserRequest $request): JsonResponse
 	{
 		$credentials = $request->validated();
 
