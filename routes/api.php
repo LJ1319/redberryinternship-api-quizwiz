@@ -1,11 +1,11 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\SanctumController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')
-	->controller(SanctumController::class)->group(function () {
+	->controller(UserController::class)->group(function () {
 		Route::get('/user', 'get');
 	});
 

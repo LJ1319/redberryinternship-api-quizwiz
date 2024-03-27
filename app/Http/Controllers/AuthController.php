@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\SignupUserRequest;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-	public function signup(LoginUserRequest $request)
+	public function signup(LoginUserRequest $request): JsonResponse
 	{
 		$credentials = $request->validated();
 
@@ -18,7 +19,7 @@ class AuthController extends Controller
 		return response()->json($user, 201);
 	}
 
-	public function login(SignupUserRequest $request)
+	public function login(SignupUserRequest $request): JsonResponse
 	{
 		$credentials = $request->validated();
 
