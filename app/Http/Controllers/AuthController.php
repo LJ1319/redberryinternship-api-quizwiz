@@ -6,6 +6,7 @@ use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\SignupUserRequest;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,26 +20,20 @@ class AuthController extends Controller
 
 		event(new Registered($user));
 
-		return response()->json(['message' => 'Email verification sent.'], 201);
+		return response()->json(['message' => 'User created successfully and email verification sent.', 201]);
 	}
 
 	public function login(LoginUserRequest $request): JsonResponse
 	{
 		$credentials = $request->validated();
 
-		if (Auth::attempt($credentials)) {
-			$request->session()->regenerate();
-		} else {
-			return response()->json('The provided credentials do not match our records.', 422);
+		if (!Auth::attempt([...$credentials, fn (Builder $query) => $query->whereNotNull('email_verified_at')])) {
+			return response()->json(['message' => 'Authentication failed. Check your credentials and email verification.'], 422);
 		}
 
-		$user = User::whereEmail($credentials['email'])->first();
+		$request->session()->regenerate();
 
-		if (!isset($user->email_verified_at)) {
-			return response()->json('Your email is not verified.', 422);
-		}
-
-		return response()->json('Successfully logged in.', 201);
+		return response()->json(['message' => 'Successfully logged in.']);
 	}
 
 	public function logout()
