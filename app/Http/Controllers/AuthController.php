@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -20,14 +22,18 @@ class AuthController extends Controller
 
 		event(new Registered($user));
 
-		return response()->json(['message' => 'User created successfully and email verification sent.', 201]);
+		return response()->json(['message' => 'User created successfully and email verification sent.'], 201);
 	}
 
 	public function login(LoginUserRequest $request): JsonResponse
 	{
 		$credentials = $request->validated();
+		$remember = $credentials['remember'];
 
-		if (!Auth::attempt([...$credentials, fn (Builder $query) => $query->whereNotNull('email_verified_at')])) {
+		if (!Auth::attempt([
+			...Arr::except($credentials, 'remember'),
+			fn (Builder $query) => $query->whereNotNull('email_verified_at'),
+		], $remember)) {
 			return response()->json(['message' => 'Authentication failed. Check your credentials and email verification.'], 422);
 		}
 
@@ -36,7 +42,14 @@ class AuthController extends Controller
 		return response()->json(['message' => 'Successfully logged in.']);
 	}
 
-	public function logout()
+	public function logout(Request $request): JsonResponse
 	{
+		Auth::logout();
+
+		$request->session()->invalidate();
+
+		$request->session()->regenerateToken();
+
+		return response()->json(['message' => 'Successfully logged out.']);
 	}
 }
