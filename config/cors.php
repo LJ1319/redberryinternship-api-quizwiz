@@ -18,7 +18,7 @@ return [
 
 	'allowed_methods' => ['*'],
 
-	'allowed_origins' => [config('FRONTEND_URL', 'http://localhost:5173')],
+	'allowed_origins' => [config('app.frontend_url', 'http://localhost:5173')],
 
 	'allowed_origins_patterns' => [],
 
