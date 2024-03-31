@@ -9,7 +9,6 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -28,10 +27,13 @@ class AuthController extends Controller
 	public function login(LoginUserRequest $request): JsonResponse
 	{
 		$credentials = $request->validated();
+		$email = $credentials['email'];
+		$password = $credentials['password'];
 		$remember = $credentials['remember'];
 
 		if (!Auth::attempt([
-			...Arr::except($credentials, 'remember'),
+			'email'             => $email,
+			'password'          => $password,
 			fn (Builder $query) => $query->whereNotNull('email_verified_at'),
 		], $remember)) {
 			return response()->json(['message' => 'Authentication failed. Check your credentials and email verification.'], 422);
