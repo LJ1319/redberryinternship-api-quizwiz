@@ -25,8 +25,10 @@ Route::middleware('guest')->group(function () {
 	});
 });
 
-Route::controller(EmailVerificationController::class)
-	->prefix('email')->name('verification.')->group(function () {
+Route::group(
+	['controller' => EmailVerificationController::class, 'prefix' => 'email', 'as' => 'verification.'],
+	function () {
 		Route::get('/verify/{id}/{hash}', 'verify')->name('verify');
 		Route::post('/verification-notification', 'resend')->middleware('throttle:6,1')->name('send');
-	});
+	}
+);
