@@ -14,7 +14,7 @@ class EmailVerificationController extends Controller
 		$user = User::findOrFail($id);
 
 		if (!request()->hasValidSignature()) {
-			return response()->json(['message' => 'Email verification expired.'], 403);
+			return response()->json(['message' => 'Invalid email verification link.'], 403);
 		}
 
 		if ($user->hasVerifiedEmail()) {

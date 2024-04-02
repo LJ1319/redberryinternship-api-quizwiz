@@ -20,8 +20,8 @@ class PasswordResetController extends Controller
 		$status = Password::sendResetLink($credentials);
 
 		return $status === Password::RESET_LINK_SENT
-			? response()->json(['status' => __($status)])
-			: response()->json(['email' => __($status)], 422);
+			? response()->json(['message' => __($status)])
+			: response()->json(['message' => __($status)], 422);
 	}
 
 	public function reset(PasswordUpdateRequest $request): JsonResponse
@@ -29,7 +29,7 @@ class PasswordResetController extends Controller
 		$credentials = $request->validated();
 
 		if (!request()->hasValidSignature()) {
-			return response()->json(['message' => 'Password reset expired.'], 403);
+			return response()->json(['message' => 'Invalid password reset link.'], 403);
 		}
 
 		$status = Password::reset(
@@ -46,7 +46,7 @@ class PasswordResetController extends Controller
 		);
 
 		return $status === Password::PASSWORD_RESET
-			? response()->json(['status' => __($status)])
-			: response()->json(['password' => __($status)], 422);
+			? response()->json(['message' => __($status)])
+			: response()->json(['message' => __($status)], 422);
 	}
 }
