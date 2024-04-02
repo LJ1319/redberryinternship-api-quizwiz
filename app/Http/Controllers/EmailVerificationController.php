@@ -17,13 +17,14 @@ class EmailVerificationController extends Controller
 			return response()->json(['message' => 'Email verification expired.'], 403);
 		}
 
-		if (!$user->hasVerifiedEmail()) {
-			$user->markEmailAsVerified();
-
-			event(new Verified($user));
+		if ($user->hasVerifiedEmail()) {
+			return response()->json(['message' => 'Your email is already verified.'], 403);
 		}
 
-		return response()->json(['message' => 'Email verified']);
+		$user->markEmailAsVerified();
+		event(new Verified($user));
+
+		return response()->json(['message' => 'Email verified.']);
 	}
 
 	public function resend(EmailVerificationRequest $request): JsonResponse
