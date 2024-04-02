@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Config;
@@ -24,6 +25,12 @@ class AppServiceProvider extends ServiceProvider
 	 */
 	public function boot(): void
 	{
+		$this->verifyEmail();
+		$this->resetPassword();
+	}
+
+	protected function verifyEmail(): void
+	{
 		VerifyEmail::toMailUsing(function ($notifiable) {
 			$user = User::whereEmail($notifiable->getEmailForVerification())->first();
 
@@ -34,7 +41,7 @@ class AppServiceProvider extends ServiceProvider
 			$id = $notifiable->getKey();
 			$hash = sha1($notifiable->getEmailForVerification());
 
-			$verifyUrl = URL::temporarySignedRoute(
+			$verificationUrl = URL::temporarySignedRoute(
 				$name,
 				$expiration,
 				[
@@ -46,9 +53,37 @@ class AppServiceProvider extends ServiceProvider
 			return (new MailMessage)
 				->subject('Email verification required!')
 				->markdown('mail.email-verification', [
-					'username'   => $user->username,
-					'away'       => $away,
-					'verifyUrl'  => $verifyUrl,
+					'username'         => $user->username,
+					'away'             => $away,
+					'expiration'       => $expiration,
+					'verificationUrl'  => $verificationUrl,
+				]);
+		});
+	}
+
+	protected function resetPassword(): void
+	{
+		ResetPassword::toMailUsing(function (User $user, string $token) {
+			$away = config('app.frontend_url') . '/reset';
+
+			$name = 'password.reset';
+			$expiration = Carbon::now()->addMinutes(Config::get('auth.passwords.users.expire', 120));
+			$email = $user->getEmailForPasswordReset();
+
+			$resetUrl = URL::temporarySignedRoute(
+				$name,
+				$expiration,
+			);
+
+			return (new MailMessage)
+				->subject('Password reset requested!')
+				->markdown('mail.password-reset', [
+					'username'     => $user->username,
+					'away'         => $away,
+					'expiration'   => $expiration,
+					'resetUrl'     => $resetUrl,
+					'token'        => $token,
+					'email'        => $email,
 				]);
 		});
 	}

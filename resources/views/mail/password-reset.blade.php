@@ -29,6 +29,7 @@
             color: white;
         }
 
+
         a {
             display: inline-block;
             width: 100%;
@@ -67,7 +68,7 @@
         </div>
 
         <h1>
-            Verify your email address to get started
+            Reset your password
         </h1>
 
         <p>
@@ -77,15 +78,15 @@
         <p>
             You're almost there! This link will expire in {{ $expiration->addMinute()->diffForHumans() }}.
             <br>
-            To complete your signup, please verify your email address.
+            Follow the link to reset your password.
         </p>
 
         <button>
-            <a href="{{ $away }}?verificationUrl={{ $verificationUrl }}" target="_blank">Verify now</a>
+            <a href="{{ $away }}?resetUrl={{ $resetUrl }}&token={{ $token }}&email={{ $email }}" target="_blank">Reset now</a>
         </button>
 
         <p>
-            If you did not create an account, no further action is required.
+            If you did not request password reset, no further action is required.
         </p>
 
         <p>
