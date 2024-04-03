@@ -26,8 +26,6 @@ class AuthController extends Controller
 
 	public function login(LoginUserRequest $request): JsonResponse
 	{
-		abort_if(Auth::check(), 401, 'You are already logged in.');
-
 		$credentials = $request->validated();
 		$email = $credentials['email'];
 		$password = $credentials['password'];

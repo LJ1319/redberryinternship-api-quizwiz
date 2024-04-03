@@ -11,15 +11,17 @@ Route::middleware('auth:sanctum')->group(function () {
 	Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-Route::controller(AuthController::class)->group(function () {
-	Route::post('/signup', 'signup')->name('signup');
-	Route::post('/login', 'login')->name('login');
-});
+Route::middleware('guest')->group(function () {
+	Route::controller(AuthController::class)->group(function () {
+		Route::post('/signup', 'signup')->name('signup');
+		Route::post('/login', 'login')->name('login');
+	});
 
-Route::controller(PasswordResetController::class)->group(function () {
-	Route::name('password.')->group(function () {
-		Route::post('/forgot-password', 'forgot')->name('email');
-		Route::post('/reset-password', 'reset')->name('reset');
+	Route::controller(PasswordResetController::class)->group(function () {
+		Route::name('password.')->group(function () {
+			Route::post('/forgot-password', 'forgot')->name('email');
+			Route::post('/reset-password', 'reset')->name('reset');
+		});
 	});
 });
 
