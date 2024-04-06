@@ -1,99 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>QuizWiz Email Verification</title>
+<x-layout>
+    <x-slot:title>
+        QuizWiz Password Reset
+    </x-slot:title>
 
-    <style>
-        h1 {
-            font-size: 2.5rem;
-            line-height: 3.75rem;
-            text-align: center;
-        }
+    <x-slot:subject>
+        Reset your password
+    </x-slot:subject>
 
-        p {
-            line-height: 1.5rem;
-            margin: 1.5rem 0;
-            font-size: 1rem;
-        }
+    <x-slot:recipient>
+        {{ $username }}
+    </x-slot:recipient>
 
-        button {
-            display: block;
-            width: 12rem;
-            height: 2.5rem;
-            margin: 0 auto;
-            padding: 0;
-            border: 0;
-            border-radius: 0.625rem;
-            background-color: #4B69FD;
-            text-align: center;
-            color: white;
-        }
+    <x-slot:expiration>
+        {{ $expiration->addMinute()->diffForHumans() }}
+    </x-slot:expiration>
 
+    <x-slot:description>
+        Follow the link to reset your password.
+    </x-slot:description>
 
-        a {
-            display: inline-block;
-            width: 100%;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1rem;
-            line-height: 2.5rem;
-        }
+    <x-slot:url>
+        {{ $away }}?resetUrl={{ $resetUrl }}&token={{ $token }}&email={{ $email }}
+    </x-slot:url>
 
-        a, a:visited, a:hover, a:active {
-            color: inherit;
-        }
-
-        #main {
-            height: 100vh;
-            background-color: #F6F6F6;
-        }
-
-        #container {
-            width: 30rem;
-            margin: 0 auto;
-            padding: 2.5rem 0;
-        }
-
-        #image-container {
-            width: 4.5rem;
-            height: 2.75rem;
-            margin: 0 auto;
-        }
-    </style>
-</head>
-<div id="main">
-    <div id="container">
-        <div id="image-container">
-            <img src="{{ asset('images/logo.png') }}" alt="QuizWiz Logo"/>
-        </div>
-
-        <h1>
-            Reset your password
-        </h1>
-
-        <p>
-            Hi {{ $username }},
-        </p>
-
-        <p>
-            You're almost there! This link will expire in {{ $expiration->addMinute()->diffForHumans() }}.
-            <br>
-            Follow the link to reset your password.
-        </p>
-
-        <button>
-            <a href="{{ $away }}?resetUrl={{ $resetUrl }}&token={{ $token }}&email={{ $email }}" target="_blank">Reset now</a>
-        </button>
-
-        <p>
-            If you did not request password reset, no further action is required.
-        </p>
-
-        <p>
-            Regards,
-            <br>
-            {{ config('app.name') }}
-        </p>
-    </div>
-</div>
-</html>
+    <x-slot:action>
+        Reset now
+    </x-slot:action>
+</x-layout>
