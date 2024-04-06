@@ -15,7 +15,7 @@ Route::middleware('guest')->group(function () {
 	Route::group(
 		['controller' => EmailVerificationController::class, 'prefix' => 'email', 'as' => 'verification.'],
 		function () {
-			Route::get('/verify/{id}/{hash}', 'verify')->name('verify');
+			Route::get('/verify/{id}/{hash}', 'verify')->middleware('signed')->name('verify');
 			Route::post('/verification-notification', 'resend')->middleware('throttle:6,1')->name('send');
 		}
 	);
@@ -31,5 +31,5 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
 	Route::get('/user', [UserController::class, 'get']);
+	Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');

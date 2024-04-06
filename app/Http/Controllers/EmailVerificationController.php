@@ -13,10 +13,6 @@ class EmailVerificationController extends Controller
 	{
 		$user = User::findOrFail($id);
 
-		if (!request()->hasValidSignature()) {
-			return response()->json(['message' => 'Invalid email verification link.'], 403);
-		}
-
 		if ($user->hasVerifiedEmail()) {
 			return response()->json(['message' => 'Your email is already verified.'], 403);
 		}
