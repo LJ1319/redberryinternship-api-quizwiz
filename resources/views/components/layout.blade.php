@@ -67,9 +67,7 @@
 
         <h1>{{ $subject }}</h1>
 
-        <p>
-            Hi {{ $recipient }},
-        </p>
+        <p>Hi {{ $recipient }},</p>
 
         <p>
             You're almost there! This link will expire in {{ $expiration }}.
@@ -83,9 +81,7 @@
             </a>
         </button>
 
-        <p>
-            If you did not request password reset, no further action is required.
-        </p>
+        <p>If you did not request password reset, no further action is required.</p>
 
         <p>
             Regards,
