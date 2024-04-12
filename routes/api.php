@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\QuizController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,3 +34,5 @@ Route::middleware('auth:sanctum')->group(function () {
 	Route::get('/user', [UserController::class, 'get']);
 	Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
+
+Route::get('quizzes', [QuizController::class, 'index'])->name('quizzes');

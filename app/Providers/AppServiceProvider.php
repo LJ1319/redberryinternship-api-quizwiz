@@ -6,6 +6,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\URL;
@@ -25,6 +26,8 @@ class AppServiceProvider extends ServiceProvider
 	 */
 	public function boot(): void
 	{
+		Model::preventLazyLoading();
+
 		$this->verifyEmail();
 		$this->resetPassword();
 	}
