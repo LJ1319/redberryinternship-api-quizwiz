@@ -2,7 +2,7 @@
 
 namespace App\Nova;
 
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
@@ -18,7 +18,7 @@ class Quiz extends Resource
 	 *
 	 * @var class-string<\App\Models\Quiz>
 	 */
-	public static $model = \App\Models\Quiz::class;
+	public static string $model = \App\Models\Quiz::class;
 
 	/**
 	 * The single value that should be used to represent the resource when being displayed.
@@ -36,6 +36,11 @@ class Quiz extends Resource
 		'id',
 	];
 
+	public static function indexQuery(NovaRequest $request, $query): Builder
+	{
+		return $query->withCount('users');
+	}
+
 	/**
 	 * Get the fields displayed by the resource.
 	 *
@@ -43,7 +48,7 @@ class Quiz extends Resource
 	 *
 	 * @return array
 	 */
-	public function fields(NovaRequest $request)
+	public function fields(NovaRequest $request): array
 	{
 		return [
 			ID::make()->sortable(),
@@ -54,60 +59,11 @@ class Quiz extends Resource
 			Trix::make('Description')->rules('required'),
 			Trix::make('Instructions')->rules('required'),
 
-			Number::make('Questions')->sortable()->rules('required'),
 			Number::make('Points')->sortable()->rules('required'),
-			Number::make('Participants')->sortable()->rules('required'),
 			Number::make('Duration')->sortable()->rules('required'),
+			Number::make('Total Users', 'users_count')->sortable(),
 
 			BelongsToMany::make('Users'),
 		];
-	}
-
-	/**
-	 * Get the cards available for the request.
-	 *
-	 * @param \Laravel\Nova\Http\Requests\NovaRequest $request
-	 *
-	 * @return array
-	 */
-	public function cards(NovaRequest $request)
-	{
-		return [];
-	}
-
-	/**
-	 * Get the filters available for the resource.
-	 *
-	 * @param \Laravel\Nova\Http\Requests\NovaRequest $request
-	 *
-	 * @return array
-	 */
-	public function filters(NovaRequest $request)
-	{
-		return [];
-	}
-
-	/**
-	 * Get the lenses available for the resource.
-	 *
-	 * @param \Laravel\Nova\Http\Requests\NovaRequest $request
-	 *
-	 * @return array
-	 */
-	public function lenses(NovaRequest $request)
-	{
-		return [];
-	}
-
-	/**
-	 * Get the actions available for the resource.
-	 *
-	 * @param \Laravel\Nova\Http\Requests\NovaRequest $request
-	 *
-	 * @return array
-	 */
-	public function actions(NovaRequest $request)
-	{
-		return [];
 	}
 }
