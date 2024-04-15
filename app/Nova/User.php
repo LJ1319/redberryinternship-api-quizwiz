@@ -71,7 +71,7 @@ class User extends Resource
 				->creationRules('required', Rules\Password::defaults())
 				->updateRules('nullable', Rules\Password::defaults()),
 
-			Number::make('Total Quizzes', 'quizzes_count')->sortable(),
+			Number::make('Total Quizzes', 'quizzes_count')->sortable()->onlyOnIndex(),
 
 			BelongsToMany::make('Quizzes'),
 		];

@@ -3,7 +3,9 @@
 namespace App\Nova;
 
 use Illuminate\Database\Eloquent\Builder;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Number;
@@ -25,7 +27,7 @@ class Quiz extends Resource
 	 *
 	 * @var string
 	 */
-	public static $title = 'id';
+	public static $title = 'name';
 
 	/**
 	 * The columns that should be searched.
@@ -33,12 +35,19 @@ class Quiz extends Resource
 	 * @var array
 	 */
 	public static $search = [
-		'id',
+		'id', 'name',
 	];
+
+	/**
+	 * The relationships that should be eager loaded on index queries.
+	 *
+	 * @var array
+	 */
+	public static $with = ['questions'];
 
 	public static function indexQuery(NovaRequest $request, $query): Builder
 	{
-		return $query->withCount('users');
+		return $query->withCount('users', 'categories', 'questions');
 	}
 
 	/**
@@ -53,17 +62,29 @@ class Quiz extends Resource
 		return [
 			ID::make()->sortable(),
 
-			Image::make('Image', null, 'local')->squared(),
+			Image::make(name: 'Image', disk: 'public')->squared(),
 
-			Text::make('Name')->sortable()->rules('required', 'max:255'),
-			Trix::make('Description')->rules('required'),
-			Trix::make('Instructions')->rules('required'),
+			Text::make('Name')->showWhenPeeking()->sortable()->rules('required', 'max:255'),
+			Trix::make('Description')->showWhenPeeking()->rules('required'),
+			Trix::make('Instructions')->showWhenPeeking()->rules('required'),
 
-			Number::make('Points')->sortable()->rules('required'),
+			Number::make('Total Categories', 'categories_count')->sortable()->onlyOnIndex(),
+			Number::make('Total Questions', 'questions_count')->sortable()->onlyOnIndex(),
+			Number::make(
+				'Points',
+				fn () => $this->questions->map(fn ($question) => $question->points)->sum()
+			)->sortable(),
+			Number::make('Total Users', 'users_count')->sortable()->onlyOnIndex(),
 			Number::make('Duration')->sortable()->rules('required'),
-			Number::make('Total Users', 'users_count')->sortable(),
 
-			BelongsToMany::make('Users'),
+			HasMany::make('Questions')->sortable(),
+			BelongsTo::make('Level')->sortable(),
+			BelongsToMany::make('Categories'),
+			BelongsToMany::make('Users')->fields(fn () => [
+				Text::make('Completed At')->sortable(),
+				Number::make('Time')->sortable(),
+				Number::make('Score')->sortable(),
+			]),
 		];
 	}
 }

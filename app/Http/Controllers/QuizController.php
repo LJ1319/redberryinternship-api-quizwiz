@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Quiz;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class QuizController extends Controller
 {
-	public function index(Request $request)
+	public function index(Request $request): JsonResponse|Paginator
 	{
 		$perPage = 9;
 		$currentPage = 1;
@@ -25,6 +27,6 @@ class QuizController extends Controller
 			}
 		}
 
-		return Quiz::simplePaginate(perPage: $perPage, page: $currentPage);
+		return Quiz::with(['users', 'level', 'categories', 'questions', 'questions.answers'])->simplePaginate(perPage: $perPage, page: $currentPage);
 	}
 }
