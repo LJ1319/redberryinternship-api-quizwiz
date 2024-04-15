@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Quiz;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class QuizUserSeeder extends Seeder
@@ -20,11 +21,25 @@ class QuizUserSeeder extends Seeder
 			'email'        => 'test@test.com',
 			'password'     => 'test',
 		]);
-		$user->quizzes()->attach($quizzes->random(rand(1, $quizzes->count()))->pluck('id')->toArray());
+		$user->quizzes()->attach(
+			$quizzes->random(rand(1, $quizzes->count()))->pluck('id')->toArray(),
+			[
+				'completed_at' => Carbon::now(),
+				'time'         => fake()->time(max: 20 * 60),
+				'score'        => rand(0, 10),
+			]
+		);
 
 		$users = User::factory(4)->create();
 		$users->each(function ($user) use ($quizzes) {
-			$user->quizzes()->attach($quizzes->random(rand(1, $quizzes->count()))->pluck('id')->toArray());
+			$user->quizzes()->attach(
+				$quizzes->random(rand(1, $quizzes->count()))->pluck('id')->toArray(),
+				[
+					'completed_at' => Carbon::now(),
+					'time'         => fake()->time(max: 20 * 60),
+					'score'        => rand(0, 10),
+				]
+			);
 		});
 	}
 }

@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EmailVerificationController;
+use App\Http\Controllers\LevelController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\UserController;
@@ -36,3 +38,5 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::get('quizzes', [QuizController::class, 'index'])->name('quizzes');
+Route::get('levels', [LevelController::class, 'index'])->name('levels');
+Route::get('categories', [CategoryController::class, 'index'])->name('categories');

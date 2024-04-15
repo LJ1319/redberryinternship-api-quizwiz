@@ -18,8 +18,6 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 
 	use HasApiTokens;
 
-	protected $with = ['quizzes'];
-
 	/**
 	 * The attributes that are mass assignable.
 	 *
