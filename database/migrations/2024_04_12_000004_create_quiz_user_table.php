@@ -13,7 +13,7 @@ return new class extends Migration {
 		Schema::create('quiz_user', function (Blueprint $table) {
 			$table->id();
 			$table->foreignId('quiz_id')->constrained();
-			$table->foreignId('user_id')->nullable()->constrained();
+			$table->foreignId('user_id')->constrained();
 			$table->timestamp('completed_at')->nullable();
 			$table->time('time')->nullable();
 			$table->unsignedTinyInteger('score')->nullable();

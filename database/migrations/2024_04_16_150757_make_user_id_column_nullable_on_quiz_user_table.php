@@ -10,12 +10,8 @@ return new class extends Migration {
 	 */
 	public function up(): void
 	{
-		Schema::create('levels', function (Blueprint $table) {
-			$table->id();
-			$table->string('name');
-			$table->string('bg_color');
-			$table->string('color');
-			$table->timestamps();
+		Schema::table('quiz_user', function (Blueprint $table) {
+			$table->foreignId('user_id')->nullable()->change();
 		});
 	}
 
@@ -24,6 +20,8 @@ return new class extends Migration {
 	 */
 	public function down(): void
 	{
-		Schema::dropIfExists('levels');
+		Schema::table('quiz_user', function (Blueprint $table) {
+			$table->foreignId('user_id')->change();
+		});
 	}
 };
