@@ -14,7 +14,7 @@ class AnswerQuestionSeeder extends Seeder
 	 */
 	public function run(): void
 	{
-		foreach (Quiz::all() as $quiz) {
+		Quiz::all()->each(function () {
 			Question::factory(rand(10, 20))->create()->each(function ($question) {
 				Answer::factory(rand(1, 3))->create([
 					'question_id' => $question->id,
@@ -25,6 +25,6 @@ class AnswerQuestionSeeder extends Seeder
 					'value'       => 1,
 				]);
 			});
-		}
+		});
 	}
 }

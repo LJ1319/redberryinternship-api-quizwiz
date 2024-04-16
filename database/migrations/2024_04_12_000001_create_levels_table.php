@@ -12,7 +12,7 @@ return new class extends Migration {
 	{
 		Schema::create('levels', function (Blueprint $table) {
 			$table->id();
-			$table->string('name');
+			$table->string('name')->unique();
 			$table->string('bg_color');
 			$table->string('color');
 			$table->timestamps();

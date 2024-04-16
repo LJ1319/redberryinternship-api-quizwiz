@@ -54,7 +54,7 @@ class User extends Resource
 		return [
 			ID::make()->sortable(),
 
-			Avatar::make('avatar')->squared(),
+			Avatar::make('Avatar')->squared(),
 
 			Text::make('Username')
 				->sortable()

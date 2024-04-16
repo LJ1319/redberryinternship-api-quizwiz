@@ -17,7 +17,7 @@ class AnswerFactory extends Factory
 	public function definition(): array
 	{
 		return [
-			'body'  => fake()->sentence(),
+			'body'  => fake()->unique()->sentence(),
 			'value' => fake()->boolean(),
 		];
 	}
