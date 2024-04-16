@@ -20,14 +20,14 @@ class QuizFactory extends Factory
 		$level_id = rand(1, Level::all()->count());
 
 		return [
-			'name'         => fake()->words(3, true),
-			'level_id'     => $level_id,
-			'description'  => fake()->paragraph(),
-			'image'        => fake()->image(dir: 'public/storage', fullPath: false),
-			'duration'     => fake()->time(max: 20 * 60),
-			'instructions' => fake()->paragraph(),
-			'created_at'   => fake()->dateTime(),
-			'updated_at'   => fake()->dateTime(),
+			'level_id'               => $level_id,
+			'name'                   => fake()->unique()->words(3, true),
+			'description'            => fake()->sentence(),
+			'image'                  => fake()->image(dir: 'public/storage', fullPath: false),
+			'duration'               => fake()->time(max: 20 * 60),
+			'instructions'           => fake()->paragraph(),
+			'created_at'             => fake()->dateTime(),
+			'updated_at'             => fake()->dateTime(),
 		];
 	}
 }

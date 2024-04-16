@@ -21,8 +21,8 @@ class QuestionFactory extends Factory
 
 		return [
 			'quiz_id' => $quiz_id,
+			'body'    => fake()->unique()->sentence(),
 			'points'  => fake()->numberBetween(1, 4),
-			'body'    => fake()->sentence(),
 		];
 	}
 }

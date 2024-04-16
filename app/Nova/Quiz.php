@@ -62,7 +62,7 @@ class Quiz extends Resource
 		return [
 			ID::make()->sortable(),
 
-			Image::make(name: 'Image', disk: 'public')->squared(),
+			Image::make('Image')->squared(),
 
 			Text::make('Name')->showWhenPeeking()->sortable()->rules('required', 'max:255'),
 			Trix::make('Description')->showWhenPeeking()->rules('required'),
