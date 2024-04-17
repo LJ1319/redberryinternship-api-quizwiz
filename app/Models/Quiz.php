@@ -33,4 +33,17 @@ class Quiz extends Model
 	{
 		return $this->hasMany(Question::class);
 	}
+
+	public function scopeFilter($query, array $filters): void
+	{
+		$query->when($filters['search'] ?? null, function ($query, $search) {
+			$query->where('name', 'like', $search . '%');
+		});
+
+		$query->when($filters['categories'] ?? null, function ($query, $categories) {
+			$query->whereHas('categories', function ($query) use ($categories) {
+				$query->whereIn('categories.id', $categories);
+			});
+		});
+	}
 }
