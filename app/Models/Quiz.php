@@ -40,6 +40,24 @@ class Quiz extends Model
 			$query->where('name', 'like', $search . '%');
 		});
 
+		$query->when(isset($filters['filter']) && $filters['filter'] === 'completed' ?? null, function ($query) {
+			$query->whereHas('users', function ($query) {
+				$query->where('users.id', auth()->id());
+			});
+		});
+
+		$query->when(isset($filters['filter']) && $filters['filter'] === 'not_completed' ?? null, function ($query) {
+			$query->whereDoesntHave('users', function ($query) {
+				$query->where('users.id', auth()->id());
+			});
+		});
+
+		$query->when($filters['levels'] ?? null, function ($query, $levels) {
+			$query->whereHas('level', function ($query) use ($levels) {
+				$query->whereIn('id', $levels);
+			});
+		});
+
 		$query->when($filters['categories'] ?? null, function ($query, $categories) {
 			$query->whereHas('categories', function ($query) use ($categories) {
 				$query->whereIn('categories.id', $categories);
