@@ -37,6 +37,10 @@ Route::middleware('auth:sanctum')->group(function () {
 	Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-Route::get('quizzes', [QuizController::class, 'index'])->name('quizzes');
+Route::group(['controller' => QuizController::class, 'as' => 'quizzes.'], function () {
+	Route::get('quizzes', 'index')->name('index');
+	Route::get('quizzes/{id}', 'get')->name('get');
+});
+
 Route::get('levels', [LevelController::class, 'index'])->name('levels');
 Route::get('categories', [CategoryController::class, 'index'])->name('categories');
