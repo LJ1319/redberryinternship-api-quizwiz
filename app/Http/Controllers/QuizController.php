@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Quiz;
+use Illuminate\Http\JsonResponse;
 
 class QuizController extends Controller
 {
@@ -25,7 +26,7 @@ class QuizController extends Controller
 					->paginate(9);
 	}
 
-	public function get(string $id)
+	public function get(string $id): JsonResponse
 	{
 		$quiz = Quiz::with(['users', 'level', 'categories', 'questions', 'questions.answers'])
 			->withCount(['users', 'categories'])
