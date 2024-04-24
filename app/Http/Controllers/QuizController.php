@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Quiz;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class QuizController extends Controller
 {
@@ -26,21 +27,21 @@ class QuizController extends Controller
 					->paginate(9);
 	}
 
-	public function get(string $id): JsonResponse
+	public function get(string $id): Model|Builder
 	{
-		$quiz = Quiz::with(['users', 'level', 'categories', 'questions', 'questions.answers'])
-			->withCount(['users', 'categories'])
-			->where('id', $id)->firstOrFail();
+		return Quiz::with(['users', 'level', 'categories', 'questions', 'questions.answers'])
+				->withCount(['users', 'categories'])
+				->where('id', $id)->firstOrFail();
+	}
 
-		$similarQuizzes = Quiz::whereHas('categories', function ($query) use ($quiz) {
+	public function getSimilar(string $id)
+	{
+		$quiz = $this->get($id);
+
+		return Quiz::whereHas('categories', function ($query) use ($quiz) {
 			$query->whereIn('categories.id', $quiz->categories()->pluck('category_id'))->whereNot('quiz_id', $quiz->id);
 		})->whereDoesntHave('users', function ($query) {
 			$query->where('users.id', auth()->id());
-		})->with(['users', 'level', 'categories', 'questions', 'questions.answers'])->simplePaginate(3);
-
-		return response()->json([
-			'quiz'           => $quiz,
-			'similarQuizzes' => $similarQuizzes,
-		]);
+		})->with(['users', 'level', 'categories', 'questions', 'questions.answers'])->take(3)->get();
 	}
 }
