@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Quiz;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class QuizController extends Controller
 {
@@ -23,5 +25,23 @@ class QuizController extends Controller
 					->withCount('users')
 					->orderBy($orderColumn, $orderDirection)
 					->paginate(9);
+	}
+
+	public function get(string $id): Model|Builder
+	{
+		return Quiz::with(['users', 'level', 'categories', 'questions', 'questions.answers'])
+				->withCount(['users', 'categories'])
+				->where('id', $id)->firstOrFail();
+	}
+
+	public function getSimilar(string $id)
+	{
+		$quiz = $this->get($id);
+
+		return Quiz::whereHas('categories', function ($query) use ($quiz) {
+			$query->whereIn('categories.id', $quiz->categories()->pluck('category_id'))->whereNot('quiz_id', $quiz->id);
+		})->whereDoesntHave('users', function ($query) {
+			$query->where('users.id', auth()->id());
+		})->with(['users', 'level', 'categories', 'questions', 'questions.answers'])->take(3)->get();
 	}
 }
