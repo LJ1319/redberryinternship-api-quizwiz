@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Quiz;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class QuizController extends Controller
 {
@@ -30,8 +32,17 @@ class QuizController extends Controller
 	public function get(string $id): Model|Builder
 	{
 		return Quiz::with(['users', 'level', 'categories', 'questions', 'questions.answers'])
-				->withCount(['users', 'categories'])
+				->withCount('users')
 				->where('id', $id)->firstOrFail();
+	}
+
+	public function getGuests(string $id): Collection
+	{
+		return DB::table('quiz_user')
+			->select(DB::raw('count(id) as guest_count'))
+			->where('quiz_id', $id)
+			->whereNull('user_id')
+			->get();
 	}
 
 	public function getSimilar(string $id)
@@ -39,9 +50,13 @@ class QuizController extends Controller
 		$quiz = $this->get($id);
 
 		return Quiz::whereHas('categories', function ($query) use ($quiz) {
-			$query->whereIn('categories.id', $quiz->categories()->pluck('category_id'))->whereNot('quiz_id', $quiz->id);
+			$query->whereIn('categories.id', $quiz->categories()->pluck('category_id'))
+					->whereNot('quiz_id', $quiz->id);
 		})->whereDoesntHave('users', function ($query) {
 			$query->where('users.id', auth()->id());
-		})->with(['users', 'level', 'categories', 'questions', 'questions.answers'])->take(3)->get();
+		})->with(['users', 'level', 'categories', 'questions', 'questions.answers'])
+			->withCount('users')
+			->take(3)
+			->get();
 	}
 }
