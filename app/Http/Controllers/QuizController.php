@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\QuizResource;
 use App\Models\Quiz;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
+use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 
 class QuizController extends Controller
 {
-	public function index()
+	public function index(): AnonymousResourceCollection
 	{
 		$orderColumn = request('order_column', 'created_at');
 		if (!in_array($orderColumn, ['name', 'created_at', 'users_count'])) {
@@ -22,41 +23,81 @@ class QuizController extends Controller
 			$orderDirection = 'desc';
 		}
 
-		return Quiz::filter(request(['search', 'filter', 'levels', 'categories']))
-					->with(['users', 'level', 'categories', 'questions', 'questions.answers'])
-					->withCount('users')
-					->orderBy($orderColumn, $orderDirection)
-					->paginate(9);
+		$quizzes = Quiz::filter(request(['search', 'filter', 'levels', 'categories']))
+			->with(['users', 'level', 'categories', 'questions', 'questions.answers'])
+			->withCount('users')
+			->orderBy($orderColumn, $orderDirection)
+			->paginate(9);
+
+		return QuizResource::collection($quizzes);
 	}
 
-	public function get(string $id): Model|Builder
+	public function get(string $id): QuizResource
 	{
-		return Quiz::with(['users', 'level', 'categories', 'questions', 'questions.answers'])
-				->withCount('users')
-				->where('id', $id)->firstOrFail();
+		$quiz = Quiz::with(['users', 'level', 'categories', 'questions', 'questions.answers'])
+			->where('id', $id)->firstOrFail();
+
+		return new QuizResource($quiz);
 	}
 
-	public function getGuests(string $id): Collection
-	{
-		return DB::table('quiz_user')
-			->select(DB::raw('count(id) as guest_count'))
-			->where('quiz_id', $id)
-			->whereNull('user_id')
-			->get();
-	}
-
-	public function getSimilar(string $id)
+	public function getSimilar(string $id): AnonymousResourceCollection
 	{
 		$quiz = $this->get($id);
 
-		return Quiz::whereHas('categories', function ($query) use ($quiz) {
+		$similarQuizzes = Quiz::whereHas('categories', function ($query) use ($quiz) {
 			$query->whereIn('categories.id', $quiz->categories()->pluck('category_id'))
 					->whereNot('quiz_id', $quiz->id);
 		})->whereDoesntHave('users', function ($query) {
 			$query->where('users.id', auth()->id());
 		})->with(['users', 'level', 'categories', 'questions', 'questions.answers'])
-			->withCount('users')
 			->take(3)
 			->get();
+
+		return QuizResource::collection($similarQuizzes);
+	}
+
+	public function submit(string $id): JsonResponse
+	{
+		$checkedAnswers = request('checkedAnswers');
+
+		$quiz = Quiz::findOrFail($id);
+		$questions = $quiz->questions()->with('answers')->get();
+
+		$correctAnswersIds = $questions->mapWithKeys(function ($question) {
+			return [$question->id => $question->answers
+				->filter(fn ($answer) => $answer->value)
+				->pluck('id')
+				->toArray()];
+		});
+
+		$score = 0;
+		$mistakes = 0;
+
+		foreach ($checkedAnswers as $questionId => $selectedAnswers) {
+			$correctAnswerIdsForQuestion = $correctAnswersIds[$questionId];
+
+			if ($correctAnswerIdsForQuestion === $selectedAnswers) {
+				$score += 1;
+			} else {
+				$mistakes += 1;
+			}
+		}
+
+		DB::table('quiz_user')->insert([
+			'quiz_id'       => $id,
+			'user_id'       => auth()->id() ?? null,
+			'time'          => request('time'),
+			'score'         => $score,
+			'created_at'    => Carbon::now(),
+			'updated_at'    => Carbon::now(),
+		]);
+
+		return response()->json([
+			'message'    => 'Your results successfully saved.',
+			'results'    => [
+				'score'    => $score,
+				'mistakes' => $mistakes,
+			],
+		], 201);
 	}
 }

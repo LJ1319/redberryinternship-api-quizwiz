@@ -24,7 +24,7 @@ class QuizFactory extends Factory
 			'name'                   => fake()->unique()->words(3, true),
 			'description'            => fake()->sentence(),
 			'image'                  => fake()->image(dir: 'public/storage', fullPath: false),
-			'duration'               => fake()->time(max: 20 * 60),
+			'duration'               => fake()->numberBetween(10, 60),
 			'instructions'           => fake()->paragraph(),
 			'created_at'             => fake()->dateTime(),
 			'updated_at'             => fake()->dateTime(),

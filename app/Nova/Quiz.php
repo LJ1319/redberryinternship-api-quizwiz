@@ -5,6 +5,7 @@ namespace App\Nova;
 use Illuminate\Database\Eloquent\Builder;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
@@ -62,7 +63,7 @@ class Quiz extends Resource
 		return [
 			ID::make()->sortable(),
 
-			Image::make('Image')->squared(),
+			Image::make('Image')->squared()->rules('required'),
 
 			Text::make('Name')->showWhenPeeking()->sortable()->rules('required', 'max:255'),
 			Trix::make('Description')->showWhenPeeking()->rules('required'),
@@ -81,8 +82,8 @@ class Quiz extends Resource
 			BelongsTo::make('Level')->sortable(),
 			BelongsToMany::make('Categories'),
 			BelongsToMany::make('Users')->fields(fn () => [
-				Text::make('Completed At')->sortable(),
-				Number::make('Time')->sortable(),
+				DateTime::make('Completed At', 'created_at')->sortable(),
+				Text::make('Time')->sortable(),
 				Number::make('Score')->sortable(),
 			]),
 		];

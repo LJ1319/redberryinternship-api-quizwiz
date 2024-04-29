@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 
 class Quiz extends Model
 {
@@ -16,7 +17,7 @@ class Quiz extends Model
 
 	public function users(): BelongsToMany
 	{
-		return $this->belongsToMany(User::class)->withPivot('completed_at', 'time', 'score')->withTimestamps();
+		return $this->belongsToMany(User::class)->withPivot('time', 'score')->withTimestamps();
 	}
 
 	public function level(): BelongsTo
@@ -48,7 +49,7 @@ class Quiz extends Model
 
 		$query->when(isset($filters['filter']) && $filters['filter'] === 'not_completed' ?? null, function ($query) {
 			$query->whereDoesntHave('users', function ($query) {
-				$query->where('users.id', auth()->id());
+				$query->where('user_id', auth()->id());
 			});
 		});
 
@@ -63,5 +64,12 @@ class Quiz extends Model
 				$query->whereIn('categories.id', $categories);
 			});
 		});
+	}
+
+	public function totalUsers(): int
+	{
+		return DB::table('quiz_user')
+				->where('quiz_id', $this->id)
+				->count();
 	}
 }

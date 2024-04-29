@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\URL;
@@ -27,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
 	public function boot(): void
 	{
 		Model::preventLazyLoading();
+		JsonResource::withoutWrapping();
 
 		$this->verifyEmail();
 		$this->resetPassword();
