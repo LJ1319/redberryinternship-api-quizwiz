@@ -6,6 +6,7 @@ use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -46,3 +47,4 @@ Route::group(['controller' => QuizController::class, 'as' => 'quizzes.'], functi
 
 Route::get('levels', [LevelController::class, 'index'])->name('levels');
 Route::get('categories', [CategoryController::class, 'index'])->name('categories');
+Route::get('settings', [SettingController::class, 'index'])->name('settings');
