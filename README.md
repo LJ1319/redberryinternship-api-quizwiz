@@ -1,66 +1,149 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# QuizWiz-API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+---
 
-## About Laravel
+This is the api for QuizWiz web app (https://github.com/RedberryInternship/front-quizwiz-luka-jikia.git) which is a platform, where we have access to vast number of quizzes of different genres.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Table of Contents
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+* [Prerequisites](#prerequisites)
+* [Tech Stack](#tech-stack)
+* [Getting Started](#getting-started)
+* [Migrations](#migration)
+* [Development](#development)
+* [Usage](#usage)
+* [Resources](#resources)
 
-## Learning Laravel
+### Prerequisites
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+* <img src="readme/assets/php.svg" width="40" style="position: relative; top: 5px" /> *PHP@8.2*
+* <img src="readme/assets/mysql.png" width="40" style="position: relative; top: 5px" /> *MYSQL@8 and up*
+* <img src="readme/assets/npm.png" width="40" style="position: relative; top: 5px" /> *npm@10 and up*
+* <img src="readme/assets/composer.png" width="40" style="position: relative; top: 10px" /> *composer@2 and up*
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Tech Stack
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+* <img src="readme/assets/laravel.png" width="20" style="position: relative; top: 5px" /> [Laravel@11.x](https://laravel.com/docs/11.x) - The PHP Framework
+* <img src="readme/assets/laravel-nova.svg" width="20" style="position: relative; top: 5px" /> [Laravel Nova] (https://nova.laravel.com/) - Package for managing administration panel
 
-## Laravel Sponsors
+### Getting Started
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+1. First of all you need to clone QuizWiz-API repository from GitHub:
 
-### Premium Partners
+```sh
+git clone https://github.com/RedberryInternship/api-quizwiz-luka-jikia.git
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+2. Next step requires you to run *composer install* in order to install all the dependencies.
 
-## Contributing
+```sh
+composer install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+3. After you have installed all the PHP dependencies, it's time to install all the JS dependencies:
 
-## Code of Conduct
+```sh
+npm install
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+4. Now we need to set our **.env** file. Go to the root of your project and execute this command.
 
-## Security Vulnerabilities
+```sh
+cp .env.example .env
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+And now you should provide **.env** file all the necessary environment variables:
 
-## License
+**MYSQL:**
+> DB_CONNECTION=mysql
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+> DB_HOST=127.0.0.1
+
+> DB_PORT=3306
+
+> DB_DATABASE=*****
+
+> DB_USERNAME=*****
+
+> DB_PASSWORD=*****
+
+**Sanctum:**
+> FRONTEND_URL=url:port
+
+> SANCTUM_STATEFUL_DOMAINS=url:port
+
+> SESSION_DOMAIN=url:port
+
+**Storage:**
+> FILESYSTEM_DISK=public
+
+
+**Mailing:**
+> MAIL_MAILER=
+
+> MAIL_HOST=
+
+> MAIL_PORT=
+
+> MAIL_USERNAME=
+
+> MAIL_PASSWORD=
+
+> MAIL_ENCRYPTION=
+
+> MAIL_FROM_ADDRESS=
+
+> MAIL_FROM_NAME="${APP_NAME}"
+
+After setting up **.env** file, in the root of you project execute:
+
+```sh
+php artisan key:generate
+```
+
+which generates auth key.
+
+This api uses Laravel Sanctum for authentication, so we need to install it by running:
+```sh
+php artisan install:api
+```
+
+To make files publicly accessible execute:
+
+```sh
+php artisan storage:link
+```
+
+You may additionally need to change default filesystem disk in ***filesystems.php***:
+> 'default' => env('FILESYSTEM_DISK', 'public'),
+
+##### Now, you should be good to go!
+
+### Migration
+
+If you've completed getting started section, then migrating database if fairly simple process, just execute:
+
+```sh
+php artisan migrate
+```
+
+### Development
+
+You can run built-in Laravel development server by executing:
+
+```sh
+php artisan serve
+```
+
+### Usage
+You must visit `your_app_url:port/nova` to see administration panel and use pre-registered user's credentials:
+
+`email`: `test@test.com`
+
+`password`: `test`
+
+### Resources
+
+* **Database Design Diagram** <img src="readme/assets/drawSQL.png">
