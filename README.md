@@ -2,7 +2,7 @@
 
 ---
 
-This is the api for QuizWiz web app (https://github.com/RedberryInternship/front-quizwiz-luka-jikia.git) which is a platform, where we have access to vast number of quizzes of different genres.
+This is the api for [QuizWiz Web App](https://github.com/RedberryInternship/front-quizwiz-luka-jikia.git) which is a platform, where we have access to vast number of quizzes of different genres.
 
 ---
 
@@ -11,7 +11,8 @@ This is the api for QuizWiz web app (https://github.com/RedberryInternship/front
 * [Prerequisites](#prerequisites)
 * [Tech Stack](#tech-stack)
 * [Getting Started](#getting-started)
-* [Migrations](#migration)
+* [Migrations](#migrations)
+* [Database Seeding](#database-seeding)
 * [Development](#development)
 * [Usage](#usage)
 * [Resources](#resources)
@@ -25,8 +26,8 @@ This is the api for QuizWiz web app (https://github.com/RedberryInternship/front
 
 ### Tech Stack
 
-* <img src="readme/assets/laravel.png" width="20" style="position: relative; top: 5px" /> [Laravel@11.x](https://laravel.com/docs/11.x) - The PHP Framework
-* <img src="readme/assets/laravel-nova.svg" width="20" style="position: relative; top: 5px" /> [Laravel Nova] (https://nova.laravel.com/) - Package for managing administration panel
+* <img src="readme/assets/laravel.png" width="20" style="position: relative; top: 5px" /> [Laravel@11.x](https://laravel.com/docs/11.x) - the PHP framework
+* <img src="readme/assets/laravel-nova.svg" width="20" style="position: relative; top: 5px" /> [Laravel Nova] (https://nova.laravel.com/) - package for managing administration panel
 
 ### Getting Started
 
@@ -121,12 +122,19 @@ You may additionally need to change default filesystem disk in ***filesystems.ph
 
 ##### Now, you should be good to go!
 
-### Migration
+### Migrations
 
-If you've completed getting started section, then migrating database if fairly simple process, just execute:
+If you've completed getting started section, then migrating database is fairly simple process, just execute:
 
 ```sh
 php artisan migrate
+```
+
+### Database Seeding
+You must populate database with data by running:
+
+```sh
+php artisan db:seed
 ```
 
 ### Development
@@ -138,7 +146,8 @@ php artisan serve
 ```
 
 ### Usage
-You must visit `your_app_url:port/nova` to see administration panel and use pre-registered user's credentials:
+
+You can start using application by visiting `your_app_url:port/nova` to see administration panel and use pre-registered user's credentials:
 
 `email`: `test@test.com`
 
