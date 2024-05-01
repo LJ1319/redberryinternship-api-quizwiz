@@ -156,3 +156,4 @@ You can start using application by visiting `your_app_url:port/nova` to see admi
 ### Resources
 
 * **Database Design Diagram** <img src="readme/assets/drawSQL.png">
+* **[Postman Documentation](https://documenter.getpostman.com/view/33083991/2sA3JDiRPH)**
