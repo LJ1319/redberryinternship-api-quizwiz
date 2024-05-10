@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Database\Eloquent\Model;
@@ -42,7 +41,7 @@ class AppServiceProvider extends ServiceProvider
 			$away = config('app.frontend_url') . '/login';
 
 			$name = 'verification.verify';
-			$expiration = Carbon::now()->addMinutes(Config::get('auth.verification.expire', 120));
+			$expiration = now()->addMinutes(Config::get('auth.verification.expire', 120));
 			$id = $notifiable->getKey();
 			$hash = sha1($notifiable->getEmailForVerification());
 
@@ -72,7 +71,7 @@ class AppServiceProvider extends ServiceProvider
 			$away = config('app.frontend_url') . '/reset';
 
 			$name = 'password.reset';
-			$expiration = Carbon::now()->addMinutes(Config::get('auth.passwords.users.expire', 120));
+			$expiration = now()->addMinutes(Config::get('auth.passwords.users.expire', 120));
 			$email = $user->getEmailForPasswordReset();
 
 			$resetUrl = URL::temporarySignedRoute(

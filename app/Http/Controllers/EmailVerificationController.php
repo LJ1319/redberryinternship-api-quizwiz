@@ -34,7 +34,7 @@ class EmailVerificationController extends Controller
 		}
 
 		if (isset($user->email_verified_at)) {
-			return response()->json(['message' => 'Your email is already verified. Go back to login.'], 422);
+			return response()->json(['message' => 'Your email is already verified. Go back to login.'], 403);
 		}
 
 		$user->sendEmailVerificationNotification();

@@ -17,7 +17,7 @@ class QuestionFactory extends Factory
 	 */
 	public function definition(): array
 	{
-		$quiz_id = rand(1, Quiz::all()->count());
+		$quiz_id = Quiz::inRandomOrder()->first();
 
 		return [
 			'quiz_id' => $quiz_id,
