@@ -17,7 +17,7 @@ class QuizFactory extends Factory
 	 */
 	public function definition(): array
 	{
-		$level_id = rand(1, Level::all()->count());
+		$level_id = Level::inRandomOrder()->first();
 
 		return [
 			'level_id'               => $level_id,

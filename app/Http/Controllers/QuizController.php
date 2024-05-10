@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\QuizResource;
 use App\Models\Quiz;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
@@ -88,8 +87,8 @@ class QuizController extends Controller
 			'user_id'       => auth()->id() ?? null,
 			'time'          => request('time'),
 			'score'         => $score,
-			'created_at'    => Carbon::now(),
-			'updated_at'    => Carbon::now(),
+			'created_at'    => now(),
+			'updated_at'    => now(),
 		]);
 
 		return response()->json([

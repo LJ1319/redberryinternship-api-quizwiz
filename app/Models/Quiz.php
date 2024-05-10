@@ -38,12 +38,12 @@ class Quiz extends Model
 	public function scopeFilter($query, array $filters): void
 	{
 		$query->when($filters['search'] ?? null, function ($query, $search) {
-			$query->where('name', 'like', $search . '%');
+			$query->where('name', 'like', '%' . $search . '%');
 		});
 
 		$query->when(isset($filters['filter']) && $filters['filter'] === 'completed' ?? null, function ($query) {
 			$query->whereHas('users', function ($query) {
-				$query->where('users.id', auth()->id());
+				$query->where('user_id', auth()->id());
 			});
 		});
 
