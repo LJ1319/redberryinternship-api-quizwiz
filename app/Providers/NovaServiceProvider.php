@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
 
@@ -13,9 +15,23 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 	 *
 	 * @return void
 	 */
-	public function boot()
+	public function boot(): void
 	{
 		parent::boot();
+
+		Nova::createUserUsing(function ($command) {
+			return [
+				$command->ask('Username'),
+				$command->ask('Email Address'),
+				$command->secret('Password'),
+			];
+		}, function ($username, $email, $password) {
+			(new User)->forceFill([
+				'username' => $username,
+				'email'    => $email,
+				'password' => Hash::make($password),
+			])->save();
+		});
 	}
 
 	/**
@@ -23,7 +39,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 	 *
 	 * @return void
 	 */
-	protected function routes()
+	protected function routes(): void
 	{
 		Nova::routes()
 				->withAuthenticationRoutes()
@@ -38,11 +54,10 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 	 *
 	 * @return void
 	 */
-	protected function gate()
+	protected function gate(): void
 	{
-		Gate::define('viewNova', function ($user) {
-			return in_array($user->email, [
-			]);
+		Gate::define('viewNova', function () {
+			return true;
 		});
 	}
 
@@ -51,7 +66,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 	 *
 	 * @return array
 	 */
-	protected function dashboards()
+	protected function dashboards(): array
 	{
 		return [
 			new \App\Nova\Dashboards\Main,
@@ -63,7 +78,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 	 *
 	 * @return array
 	 */
-	public function tools()
+	public function tools(): array
 	{
 		return [];
 	}
