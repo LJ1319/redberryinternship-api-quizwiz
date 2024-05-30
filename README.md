@@ -131,6 +131,7 @@ php artisan migrate
 ```
 
 ### Database Seeding
+
 You must populate database with data by running:
 
 ```sh
@@ -145,13 +146,9 @@ You can run built-in Laravel development server by executing:
 php artisan serve
 ```
 
-### Usage
+### Usage (in productions)
 
-You can start using application by visiting `your_app_url:port/nova` to see administration panel and use pre-registered user's credentials:
-
-`email`: `test@test.com`
-
-`password`: `test`
+You can start using application by visiting `your_app_url/nova` to see administration panel.
 
 ### Resources
 
