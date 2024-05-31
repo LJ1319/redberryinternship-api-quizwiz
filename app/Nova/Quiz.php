@@ -11,7 +11,7 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Trix;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Quiz extends Resource
@@ -66,8 +66,8 @@ class Quiz extends Resource
 			Image::make('Image')->squared()->rules('required'),
 
 			Text::make('Name')->showWhenPeeking()->sortable()->rules('required', 'max:255'),
-			Trix::make('Description')->showWhenPeeking()->rules('required'),
-			Trix::make('Instructions')->showWhenPeeking()->rules('required'),
+			Textarea::make('Description')->showWhenPeeking()->rules('required'),
+			Textarea::make('Instructions')->showWhenPeeking()->rules('required'),
 
 			Number::make('Total Categories', 'categories_count')->sortable()->onlyOnIndex(),
 			Number::make('Total Questions', 'questions_count')->sortable()->onlyOnIndex(),

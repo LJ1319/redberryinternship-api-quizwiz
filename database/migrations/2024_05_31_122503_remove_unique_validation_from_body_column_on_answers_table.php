@@ -11,7 +11,7 @@ return new class extends Migration {
 	public function up(): void
 	{
 		Schema::table('answers', function (Blueprint $table) {
-			$table->string('body')->unique()->change();
+			$table->dropUnique('answers_body_unique');
 		});
 	}
 
@@ -21,7 +21,7 @@ return new class extends Migration {
 	public function down(): void
 	{
 		Schema::table('answers', function (Blueprint $table) {
-			$table->dropUnique('answers_body_unique');
+			$table->string('body')->unique()->change();
 		});
 	}
 };
