@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -45,7 +46,7 @@ class Answer extends Resource
 			ID::make()->sortable(),
 
 			Text::make('Body')->rules('required'),
-			Text::make('Value')->rules('required'),
+			Boolean::make('Value')->rules('required'),
 
 			BelongsTo::make('Question'),
 		];
